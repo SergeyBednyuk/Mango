@@ -35,8 +35,21 @@ namespace Mango.Services.CouponAPI
 
 
             app.MapControllers();
-
+            ApplayMigrations();
             app.Run();
+
+
+            void ApplayMigrations()
+            {
+                using (var scope = app.Services.CreateScope())
+                {
+                    var _db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                    if(_db.Database.GetPendingMigrations().Count() > 0)
+                    {
+                        _db.Database.Migrate();
+                    }
+                }
+            }
         }
     }
 }
