@@ -1,10 +1,10 @@
 ﻿namespace Mango.Web.Models
 {
-    public sealed class CouponDto
+    public sealed record CouponDto
     {
-        public int CouponId { get; set; }
-        public string CouponCode { get; set; }
-        public double DiscountAmount { get; set; }
-        public int MinAmount { get; set; }
+        public int CouponId { get; init; }
+        public string CouponCode { get; init; }
+        public double DiscountAmount { get; init; }
+        public int MinAmount { get; init; }
     }
 }
