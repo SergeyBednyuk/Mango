@@ -25,10 +25,13 @@ namespace Mango.Services.AuthAPI.Services
         {
             var user = await _db.ApplicationUsers.FirstOrDefaultAsync(u => u.Email.ToLower() == loginRequest.UserName.ToLower());
             var isValid = await _userManager.CheckPasswordAsync(user, loginRequest.Password);
+
             if (user == null || !isValid)
             {
-                return new LoginResponseDto();
+                return new LoginResponseDto() {  User = null, Token = String.Empty};
             }
+
+            //If user was found, generate JWT Token
 
             return new LoginResponseDto()
             {
@@ -38,7 +41,8 @@ namespace Mango.Services.AuthAPI.Services
                    Name = user.Name,
                    Email = user.Email,
                    PhoneNumber = user.PhoneNumber
-               }
+               },
+               Token = String.Empty
             };
         }
 
