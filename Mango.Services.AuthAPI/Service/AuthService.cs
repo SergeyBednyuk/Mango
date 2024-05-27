@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity.Data;
 
 namespace Mango.Services.AuthAPI.Service
 {
-    public class AuthService : IAuthService
+    public sealed class AuthService : IAuthService
     {
         private readonly AuthAPIAppDbContext _db;
         private readonly UserManager<ApplicationUser> _userManager;

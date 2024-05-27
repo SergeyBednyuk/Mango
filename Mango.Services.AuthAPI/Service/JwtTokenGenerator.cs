@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Mango.Services.AuthAPI.Service
 {
-    public class JwtTokenGenerator : IJwtTokenGenerator
+    public sealed class JwtTokenGenerator : IJwtTokenGenerator
     {
         private readonly JwtOptions _jwtOptions;
 
