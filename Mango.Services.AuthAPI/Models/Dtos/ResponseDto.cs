@@ -1,6 +1,6 @@
 ﻿namespace Mango.Services.AuthAPI.Models.Dtos
 {
-    public sealed class ResponseDto
+    public class ResponseDto
     {
         public object? Result { get; set; }
         public bool IsSuccess { get; set; } = true;

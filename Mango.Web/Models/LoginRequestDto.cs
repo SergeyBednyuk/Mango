@@ -1,4 +1,4 @@
-﻿namespace Mango.Services.AuthAPI.Models.Dtos
+﻿namespace Mango.Web.Models
 {
     public record LoginRequestDto
     {
