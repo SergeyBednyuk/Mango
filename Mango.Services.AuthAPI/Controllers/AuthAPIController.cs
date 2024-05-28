@@ -41,7 +41,7 @@ namespace Mango.Services.AuthAPI.Controllers
                 return BadRequest(_response);
             }
             _response.Result = result;
-            return Ok(result);
+            return Ok(_response);
         }
 
         [HttpPost("assignrole")]
@@ -54,7 +54,7 @@ namespace Mango.Services.AuthAPI.Controllers
                 _response.Message = "Error encourted";
                 return BadRequest(_response);
             }
-            return Ok(result);
+            return Ok(_response);
         }
     }
 }
