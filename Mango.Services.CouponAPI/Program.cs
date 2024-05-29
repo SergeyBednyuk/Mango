@@ -17,11 +17,14 @@ namespace Mango.Services.CouponAPI
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+
+            //Db configuration
             builder.Services.AddDbContext<AppDbContext>(option =>
             {
                 option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            //Mapper configuration
             IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
             builder.Services.AddSingleton(mapper);
             builder.Services.AddAutoMapper(typeof(MappingConfig));
@@ -29,6 +32,8 @@ namespace Mango.Services.CouponAPI
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
+
+            //Swagger configuration
             builder.Services.AddSwaggerGen(option =>
             {
                 option.AddSecurityDefinition(name: JwtBearerDefaults.AuthenticationScheme, securityScheme: new OpenApiSecurityScheme()
@@ -54,6 +59,7 @@ namespace Mango.Services.CouponAPI
                 });
             });
 
+            //Authorization configuration
             builder.AddAppAuthentication();
             builder.Services.AddAuthorization();
 
