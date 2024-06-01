@@ -1,12 +1,16 @@
-﻿namespace Mango.Web.Models.Product
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Mango.Web.Models.Product
 {
-    public sealed class ProductDto
+    public sealed record class ProductDto
     {
-        public int ProductId { get; set; }
-        public string Name { get; set; }
-        public double Price { get; set; }
-        public string Description { get; set; }
-        public string CategoryName { get; set; }
-        public string ImageUrl { get; set; }
+        public int ProductId { get; init; }
+        public string Name { get; init; }
+        public double Price { get; init; }
+        public string Description { get; init; }
+        public string CategoryName { get; init; }
+        public string ImageUrl { get; init; }
+        [Range(1, 100)]
+        public int Count { get; init; } = 1;
     }
 }
