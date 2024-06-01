@@ -15,19 +15,32 @@ namespace Mango.Web.Service
             _baseService = baseService;
         }
 
-        public Task<ResponseDto?> AddProductAsync(CreateProductRequestDto product)
+        public async Task<ResponseDto?> AddProductAsync(CreateProductRequestDto product)
         {
-            throw new NotImplementedException();
+            return await _baseService.SendAsync(new RequestDto()
+            {
+                ApiType = ApiType.POST,
+                Data = product,
+                Url = SD.ProductAPIBase + "/api/product/"
+            });
         }
 
-        public Task<ResponseDto> DeleteProductAsync(string productId)
+        public async Task<ResponseDto?> DeleteProductAsync(int productId)
         {
-            throw new NotImplementedException();
+            return await _baseService.SendAsync(new RequestDto()
+            {
+                ApiType = ApiType.DELETE,
+                Url = SD.ProductAPIBase + "/api/product/" + productId
+            });
         }
 
-        public Task<ResponseDto?> GetProductByIdAsync(string productId)
+        public async Task<ResponseDto?> GetProductByIdAsync(int productId)
         {
-            throw new NotImplementedException();
+            return await _baseService.SendAsync(new RequestDto()
+            {
+                ApiType = ApiType.GET,
+                Url = SD.ProductAPIBase + "/api/product/" + productId
+            });
         }
 
         public async Task<ResponseDto?> GetProductsAsync()
@@ -35,7 +48,7 @@ namespace Mango.Web.Service
             return await _baseService.SendAsync(new RequestDto()
             {
                 ApiType = ApiType.GET,
-                Url = SD.CouponAPIBase + "/api/product"
+                Url = SD.ProductAPIBase + "/api/product"
             });
         }
 
@@ -45,7 +58,7 @@ namespace Mango.Web.Service
             {
                 ApiType = ApiType.PUT,
                 Data = product,
-                Url = SD.CouponAPIBase + "/api/product"
+                Url = SD.ProductAPIBase + "/api/product"
             });
         }
     }
