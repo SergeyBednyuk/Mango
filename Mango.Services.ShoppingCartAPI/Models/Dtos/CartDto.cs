@@ -1,6 +1,6 @@
 ﻿namespace Mango.Services.ShoppingCartAPI.Models.Dtos
 {
-    public class CartDto
+    public sealed class CartDto
     {
         public CartHeaderDto CartHeader { get; set; }
         public IEnumerable<CartDetailsDto> CartDetails { get; set; }

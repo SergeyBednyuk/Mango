@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mango.Services.ShoppingCartAPI.Models
 {
-    public class CartDetails
+    public sealed class CartDetails
     {
         [Key]
         public int CartDetailsId { get; set; }
