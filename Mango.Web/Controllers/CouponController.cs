@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace Mango.Web.Controllers
 {
-    public class CouponController : Controller
+    public sealed class CouponController : Controller
     {
         private readonly ICouponService _couponService;
         public CouponController(ICouponService couponService)

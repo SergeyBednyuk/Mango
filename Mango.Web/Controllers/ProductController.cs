@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace Mango.Web.Controllers
 {
-	public class ProductController : Controller
+	public sealed class ProductController : Controller
 	{
 		private readonly IProductService _productService;
 

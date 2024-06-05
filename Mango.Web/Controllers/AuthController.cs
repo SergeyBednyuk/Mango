@@ -11,7 +11,7 @@ using System.Security.Claims;
 
 namespace Mango.Web.Controllers
 {
-    public class AuthController : Controller
+    public sealed class AuthController : Controller
     {
         private readonly IAuthService _authService;
         private readonly ITokenProvider _tokenProvider;
