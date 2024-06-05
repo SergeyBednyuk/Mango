@@ -16,13 +16,15 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
         private IMapper _mapper;
         private readonly ResponseDto _responseDto;
         private readonly IProductService _productService;
+        private readonly ICouponService _couponService;
 
-        public ShoppingCartAPIController(AppDbContext db, IMapper mapper, IProductService productService)
+        public ShoppingCartAPIController(AppDbContext db, IMapper mapper, IProductService productService, ICouponService couponService)
         {
             _db = db;
             _mapper = mapper;
             _responseDto = new ResponseDto();
             _productService = productService;
+            _couponService = couponService;
         }
 
         [HttpGet]
@@ -41,14 +43,29 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
                         CartDetails = _mapper.Map<IEnumerable<CartDetailsDto>>(cartDetails)
                     };
 
+                    //TODO GetProductsAsync() vs GetProductByIdAsync()???
+                    //one response with big data response or oseveral responses with small data
+                    //Prodict table can have index because it has static amount
                     var products = await _productService.GetProductsAsync();
 
                     foreach (var cart in cartToReturn.CartDetails)
                     {
                         //TODO is it best practice?
                         cart.Product = products.FirstOrDefault(x => x.ProductId == cart.ProductId);
-                        cart.CartHeader.CartTotal += cart.Count * cart.Product.Price;
+                        cartToReturn.CartHeader.CartTotal += cart.Count * cart.Product.Price;
                     }
+
+                    //apply coupon
+                    if (!String.IsNullOrEmpty(cartHeader.CouponCode))
+                    {
+                        var coupon = await _couponService.GetCouponAsync("10OFF");
+                        if (coupon != null && cartToReturn.CartHeader.CartTotal > coupon.MinAmount)
+                        {
+                            cartToReturn.CartHeader.CartTotal -= coupon.DiscountAmount;
+                            cartToReturn.CartHeader.Discount = coupon.DiscountAmount;
+                        }
+                    }
+
                     _responseDto.Result = cartToReturn;
                 }
             }
@@ -90,29 +107,6 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
                 else
                 {
                     //TODO investigation for best way to update details
-                    //var cartDetail = await _db.CartDetails.FirstOrDefaultAsync(x => x.CartHeaderId == cartHeader.CartHeaderId
-                    //                                              && cart.CartDetails.Select(x => x.ProductId).Contains(x.ProductId));
-                    //var cartDetails = await _db.CartDetails.Where(x => x.CartHeaderId == cartHeader.CartHeaderId).ToListAsync();
-                    //if (cartDetails == null && cartDetails.Select(x => x.ProductId).Contains(x => ))
-                    //{
-                    //    var newCartDetails = _mapper.Map<IEnumerable<CartDetails>>(cart.CartDetails);
-                    //    if (newCartDetails.Count() > 0)
-                    //    {
-                    //        foreach (var item in newCartDetails)
-                    //        {
-                    //            item.CartHeaderId = cartHeader.CartHeaderId;
-                    //        }
-                    //        _db.CartDetails.AddRange(newCartDetails);
-                    //        await _db.SaveChangesAsync();
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    var updatedCartsDetails = _mapper.Map<IEnumerable<CartDetails>>(cart.CartDetails);
-
-                    //}
-
-                    //TMP solution
                     var cartDetails = await _db.CartDetails.AsNoTracking().FirstOrDefaultAsync(x => x.ProductId == cart.CartDetails.Last().ProductId
                                                                                 && x.CartHeaderId == cartHeader.CartHeaderId);
                     if (cartDetails == null)
@@ -190,7 +184,7 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
             return _responseDto;
         }
 
-        [HttpPost]
+        [HttpPost("applycoupon")]
         public async Task<ResponseDto> ApplyCoupon([FromBody] CartDto cart)
         {
             try
@@ -212,7 +206,7 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
             return _responseDto;
         }
 
-        [HttpPost]
+        [HttpPost("removecoupon")]
         public async Task<ResponseDto> RemoveCoupon([FromBody] CartDto cart)
         {
             try

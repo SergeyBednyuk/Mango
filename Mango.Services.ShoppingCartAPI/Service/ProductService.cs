@@ -14,6 +14,20 @@ namespace Mango.Services.ShoppingCartAPI.Service
         {
             _httpClientFactory = httpClientFactory;
         }
+
+        public async Task<ProductDto?> GetProductByIdAsync(int id)
+        {
+            var client = _httpClientFactory.CreateClient("Product");
+            var response = await client.GetAsync($"api/product/" + id);
+            var apiContent = await response.Content.ReadAsStringAsync();
+            var responseDes = JsonConvert.DeserializeObject<ResponseDto>(apiContent);
+            if (responseDes != null && responseDes.IsSuccess)
+            {
+                return JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(responseDes.Result));
+            }
+            return null;
+        }
+
         public async Task<IEnumerable<ProductDto>> GetProductsAsync()
         {
             var client = _httpClientFactory.CreateClient("Product");
